@@ -216,7 +216,7 @@ Ensure `core-lending-personal-loans` is running on `http://localhost:8091` and a
 
 ```bash
 mvn clean install -DskipTests
-cd /Users/ancongui/Development/firefly/domain-lending-personal-loans
+cd domain-lending-personal-loans
 mvn spring-boot:run -pl domain-lending-personal-loans-web
 ```
 
