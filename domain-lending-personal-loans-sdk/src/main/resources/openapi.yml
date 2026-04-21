@@ -1,0 +1,270 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:18080
+  description: Generated server url
+tags:
+- name: Personal Loans
+  description: Domain-level orchestration for personal loan workflows
+paths:
+  /api/v1/personal-loans/agreements/{agreementId}:
+    get:
+      tags:
+      - Personal Loans
+      summary: Get agreement
+      description: Retrieves a personal loan agreement by its identifier.
+      operationId: getAgreement
+      parameters:
+      - name: agreementId
+        in: path
+        description: Unique identifier of the agreement
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Agreement found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        "404":
+          description: Agreement not found
+    put:
+      tags:
+      - Personal Loans
+      summary: Update agreement
+      description: Updates an existing personal loan agreement.
+      operationId: updateAgreement
+      parameters:
+      - name: agreementId
+        in: path
+        description: Unique identifier of the agreement
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        required: true
+      responses:
+        "200":
+          description: Agreement updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        "404":
+          description: Agreement not found
+  /api/v1/personal-loans/agreements:
+    get:
+      tags:
+      - Personal Loans
+      summary: List agreements
+      description: Lists all personal loan agreements.
+      operationId: listAgreements
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Agreements listed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginationResponsePersonalLoanAgreementDTO"
+    post:
+      tags:
+      - Personal Loans
+      summary: Create agreement
+      description: Creates a new personal loan agreement.
+      operationId: createAgreement
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        required: true
+      responses:
+        "201":
+          description: Agreement created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        "400":
+          description: Invalid request
+components:
+  schemas:
+    PersonalLoanAgreementDTO:
+      required:
+      - agreementStatus
+      - applicationId
+      - loanPurpose
+      - rateType
+      type: object
+      properties:
+        personalLoanAgreementId:
+          type: string
+          format: uuid
+        applicationId:
+          type: string
+          format: uuid
+        servicingCaseId:
+          type: string
+          format: uuid
+        proposedOfferId:
+          type: string
+          format: uuid
+        agreementStatus:
+          type: string
+          enum:
+          - DRAFT
+          - ACTIVE
+          - SUSPENDED
+          - CLOSED
+          - CANCELLED
+        loanPurpose:
+          type: string
+          enum:
+          - GENERAL_PURPOSE
+          - DEBT_CONSOLIDATION
+          - HOME_IMPROVEMENT
+          - MAJOR_PURCHASE
+          - MEDICAL_EXPENSE
+          - EDUCATION
+          - OTHER
+        purposeDescription:
+          type: string
+        rateType:
+          type: string
+          enum:
+          - FIXED
+          - VARIABLE
+          - HYBRID
+        interestRate:
+          type: number
+        referenceRate:
+          type: string
+        marginRate:
+          type: number
+        fixedRatePeriodMonths:
+          type: integer
+          format: int32
+        rateCap:
+          type: number
+        rateFloor:
+          type: number
+        isUnsecured:
+          type: boolean
+        guarantorRequired:
+          type: boolean
+        insuranceType:
+          type: string
+          enum:
+          - NONE
+          - PAYMENT_PROTECTION
+          - LIFE
+          - DISABILITY
+          - UNEMPLOYMENT
+          - COMPREHENSIVE
+        insurancePremiumRate:
+          type: number
+        insuranceProvider:
+          type: string
+        insurancePolicyNumber:
+          type: string
+        earlyRepaymentPenaltyType:
+          type: string
+          enum:
+          - NONE
+          - FIXED_FEE
+          - PERCENTAGE
+          - SLIDING_SCALE
+        earlyRepaymentPenaltyRate:
+          type: number
+        earlyRepaymentPenaltyPeriodMonths:
+          type: integer
+          format: int32
+        allowsPartialPrepayment:
+          type: boolean
+        partialPrepaymentMinAmount:
+          type: number
+        originationFeeRate:
+          type: number
+        originationFeeAmount:
+          type: number
+        coolingOffPeriodDays:
+          type: integer
+          format: int32
+        maxDeferralCount:
+          type: integer
+          format: int32
+        deferralPeriodMonths:
+          type: integer
+          format: int32
+        agreementSignedDate:
+          type: string
+          format: date
+        agreementEffectiveDate:
+          type: string
+          format: date
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    PaginationResponsePersonalLoanAgreementDTO:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PersonalLoanAgreementDTO"
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        currentPage:
+          type: integer
+          format: int32
