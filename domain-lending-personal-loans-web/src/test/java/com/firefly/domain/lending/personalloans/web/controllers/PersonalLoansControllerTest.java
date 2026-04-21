@@ -16,7 +16,7 @@
 
 package com.firefly.domain.lending.personalloans.web.controllers;
 
-import com.firefly.core.lending.personalloans.sdk.model.PaginationResponse;
+import com.firefly.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import com.firefly.core.lending.personalloans.sdk.model.PersonalLoanAgreementDTO;
 import com.firefly.domain.lending.personalloans.core.services.PersonalLoansService;
 import org.fireflyframework.web.error.config.ErrorHandlingProperties;
@@ -115,13 +115,13 @@ class PersonalLoansControllerTest {
 
     @Test
     void listAgreements_returns200() {
-        var page = new PaginationResponse();
+        var page = new PaginationResponsePersonalLoanAgreementDTO();
         when(personalLoansService.listAgreements()).thenReturn(Mono.just(page));
 
         webTestClient.get()
                 .uri("/api/v1/personal-loans/agreements")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(PaginationResponse.class);
+                .expectBody(PaginationResponsePersonalLoanAgreementDTO.class);
     }
 }

@@ -16,7 +16,7 @@
 
 package com.firefly.domain.lending.personalloans.core.services;
 
-import com.firefly.core.lending.personalloans.sdk.model.PaginationResponse;
+import com.firefly.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import com.firefly.core.lending.personalloans.sdk.model.PersonalLoanAgreementDTO;
 import com.firefly.domain.lending.personalloans.core.commands.CreatePersonalLoanAgreementCommand;
 import com.firefly.domain.lending.personalloans.core.commands.GetPersonalLoanAgreementQuery;
@@ -61,7 +61,7 @@ public class PersonalLoansServiceImpl implements PersonalLoansService {
     }
 
     @Override
-    public Mono<PaginationResponse> listAgreements() {
+    public Mono<PaginationResponsePersonalLoanAgreementDTO> listAgreements() {
         return queryBus.query(new ListPersonalLoanAgreementsQuery());
     }
 }

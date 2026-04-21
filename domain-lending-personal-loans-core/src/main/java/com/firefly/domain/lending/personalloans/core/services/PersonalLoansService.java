@@ -16,7 +16,7 @@
 
 package com.firefly.domain.lending.personalloans.core.services;
 
-import com.firefly.core.lending.personalloans.sdk.model.PaginationResponse;
+import com.firefly.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import com.firefly.core.lending.personalloans.sdk.model.PersonalLoanAgreementDTO;
 import com.firefly.domain.lending.personalloans.core.commands.CreatePersonalLoanAgreementCommand;
 import com.firefly.domain.lending.personalloans.core.commands.UpdatePersonalLoanAgreementCommand;
@@ -61,5 +61,5 @@ public interface PersonalLoansService {
      *
      * @return a paginated list of agreements
      */
-    Mono<PaginationResponse> listAgreements();
+    Mono<PaginationResponsePersonalLoanAgreementDTO> listAgreements();
 }

@@ -18,7 +18,7 @@ package com.firefly.domain.lending.personalloans.core.handlers;
 
 import com.firefly.core.lending.personalloans.sdk.api.PersonalLoanAgreementApi;
 import com.firefly.core.lending.personalloans.sdk.model.FilterRequestPersonalLoanAgreementDTO;
-import com.firefly.core.lending.personalloans.sdk.model.PaginationResponse;
+import com.firefly.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import com.firefly.domain.lending.personalloans.core.commands.ListPersonalLoanAgreementsQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.fireflyframework.cqrs.annotations.QueryHandlerComponent;
@@ -32,7 +32,7 @@ import java.util.UUID;
  */
 @Slf4j
 @QueryHandlerComponent
-public class ListPersonalLoanAgreementsHandler extends QueryHandler<ListPersonalLoanAgreementsQuery, PaginationResponse> {
+public class ListPersonalLoanAgreementsHandler extends QueryHandler<ListPersonalLoanAgreementsQuery, PaginationResponsePersonalLoanAgreementDTO> {
 
     private final PersonalLoanAgreementApi personalLoanAgreementApi;
 
@@ -46,7 +46,7 @@ public class ListPersonalLoanAgreementsHandler extends QueryHandler<ListPersonal
     }
 
     @Override
-    protected Mono<PaginationResponse> doHandle(ListPersonalLoanAgreementsQuery query) {
+    protected Mono<PaginationResponsePersonalLoanAgreementDTO> doHandle(ListPersonalLoanAgreementsQuery query) {
         log.debug("Listing all personal loan agreements");
         return personalLoanAgreementApi.findAll(new FilterRequestPersonalLoanAgreementDTO(), UUID.randomUUID().toString());
     }

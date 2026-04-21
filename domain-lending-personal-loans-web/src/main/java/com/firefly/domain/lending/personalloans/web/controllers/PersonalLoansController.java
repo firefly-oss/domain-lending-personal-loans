@@ -16,7 +16,7 @@
 
 package com.firefly.domain.lending.personalloans.web.controllers;
 
-import com.firefly.core.lending.personalloans.sdk.model.PaginationResponse;
+import com.firefly.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import com.firefly.core.lending.personalloans.sdk.model.PersonalLoanAgreementDTO;
 import com.firefly.domain.lending.personalloans.core.commands.CreatePersonalLoanAgreementCommand;
 import com.firefly.domain.lending.personalloans.core.commands.UpdatePersonalLoanAgreementCommand;
@@ -131,9 +131,9 @@ public class PersonalLoansController {
     @Operation(summary = "List agreements", description = "Lists all personal loan agreements.")
     @ApiResponse(responseCode = "200", description = "Agreements listed",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = PaginationResponse.class)))
+                    schema = @Schema(implementation = PaginationResponsePersonalLoanAgreementDTO.class)))
     @GetMapping(value = "/agreements", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<PaginationResponse>> listAgreements() {
+    public Mono<ResponseEntity<PaginationResponsePersonalLoanAgreementDTO>> listAgreements() {
         return personalLoansService.listAgreements()
                 .map(ResponseEntity::ok);
     }
