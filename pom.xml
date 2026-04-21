@@ -31,6 +31,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- External SDKs -->
+            <dependency>
+                <groupId>com.firefly</groupId>
+                <artifactId>core-lending-personal-loans-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- Internal modules -->
             <dependency>
                 <groupId>com.firefly</groupId>
