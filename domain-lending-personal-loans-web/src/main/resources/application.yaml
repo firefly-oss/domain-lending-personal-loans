@@ -47,7 +47,7 @@ server:
 api-configuration:
   core-lending:
     personal-loans:
-      base-path: ${PERSONAL_LOANS_CORE_URL:http://localhost:8091}
+      base-path: ${ENDPOINT_CORE_LENDING_PERSONAL_LOANS:http://localhost:8091}
 
 springdoc:
   api-docs:
