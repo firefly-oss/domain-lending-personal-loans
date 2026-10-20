@@ -209,14 +209,14 @@ All configuration is in `domain-lending-personal-loans-web/src/main/resources/ap
 |----------|-------|-------------|
 | `springdoc.api-docs.path` | `/v3/api-docs` | OpenAPI JSON spec path |
 | `springdoc.swagger-ui.path` | `/swagger-ui.html` | Swagger UI path |
-| `springdoc.packages-to-scan` | `com.firefly.domain.lending.personalloans.web.controllers` | Packages scanned for API definitions |
+| `springdoc.packages-to-scan` | `io.fireflysoftware.domain.lending.personalloans.web.controllers` | Packages scanned for API definitions |
 | `springdoc.paths-to-match` | `/api/**` | URL patterns included in the spec |
 
 Swagger UI and the API docs endpoint are **disabled in the `prod` profile**.
 
 ### Logging Profiles
 
-| Profile | Root Level | `com.firefly` Level | `org.springframework` Level |
+| Profile | Root Level | `io.fireflysoftware` Level | `org.springframework` Level |
 |---------|-----------|---------------------|-----------------------------|
 | _(default)_ | — | — | — |
 | `dev` | `INFO` | `DEBUG` | — |

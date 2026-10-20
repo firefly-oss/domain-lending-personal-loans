@@ -59,7 +59,7 @@ springdoc:
     operationsSorter: method
     docExpansion: none
     filter: true
-  packages-to-scan: com.firefly.domain.lending.personalloans.web.controllers
+  packages-to-scan: io.fireflysoftware.domain.lending.personalloans.web.controllers
   paths-to-match: /api/**
 
 management:
@@ -91,7 +91,7 @@ spring:
 logging:
   level:
     root: INFO
-    com.firefly: DEBUG
+    io.fireflysoftware: DEBUG
 
 ---
 spring:
@@ -102,7 +102,7 @@ spring:
 logging:
   level:
     root: INFO
-    com.firefly: INFO
+    io.fireflysoftware: INFO
 
 ---
 spring:
@@ -113,7 +113,7 @@ spring:
 logging:
   level:
     root: WARN
-    com.firefly: INFO
+    io.fireflysoftware: INFO
     org.springframework: WARN
 
 springdoc:
