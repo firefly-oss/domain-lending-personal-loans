@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>domain-lending-personal-loans-interfaces</artifactId>
+    <name>domain-lending-personal-loans-interfaces</name>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
