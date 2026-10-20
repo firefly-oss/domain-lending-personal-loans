@@ -52,7 +52,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
         ),
         servers = {
                 @Server(
-                        url = "http://core.getfirefly.io/domain-lending-personal-loans",
+                        url = "https://openplatform.fireflysoftware.io/domain-lending-personal-loans",
                         description = "Development Environment"
                 ),
                 @Server(
