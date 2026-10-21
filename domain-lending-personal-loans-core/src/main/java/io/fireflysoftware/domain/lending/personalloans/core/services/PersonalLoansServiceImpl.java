@@ -18,14 +18,20 @@ package io.fireflysoftware.domain.lending.personalloans.core.services;
 
 import io.fireflysoftware.core.lending.personalloans.sdk.model.PaginationResponsePersonalLoanAgreementDTO;
 import io.fireflysoftware.core.lending.personalloans.sdk.model.PersonalLoanAgreementDTO;
+import io.fireflysoftware.domain.lending.personalloans.core.StoredAgreement;
 import io.fireflysoftware.domain.lending.personalloans.core.commands.CreatePersonalLoanAgreementCommand;
 import io.fireflysoftware.domain.lending.personalloans.core.commands.GetPersonalLoanAgreementQuery;
 import io.fireflysoftware.domain.lending.personalloans.core.commands.ListPersonalLoanAgreementsQuery;
+import io.fireflysoftware.domain.lending.personalloans.core.commands.LoadPersonalLoanAgreementCommand;
 import io.fireflysoftware.domain.lending.personalloans.core.commands.UpdatePersonalLoanAgreementCommand;
+import io.fireflysoftware.domain.lending.personalloans.core.workflows.RegisterPersonalLoanAgreementSaga;
+import io.fireflysoftware.domain.lending.personalloans.core.workflows.UpdatePersonalLoanAgreementSaga;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fireflyframework.cqrs.command.CommandBus;
 import org.fireflyframework.cqrs.query.QueryBus;
+import org.fireflyframework.orchestration.saga.engine.SagaEngine;
+import org.fireflyframework.orchestration.saga.engine.SagaResult;
+import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -42,12 +48,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PersonalLoansServiceImpl implements PersonalLoansService {
 
-    private final CommandBus commandBus;
+    private final SagaEngine engine;
     private final QueryBus queryBus;
 
     @Override
     public Mono<PersonalLoanAgreementDTO> createAgreement(CreatePersonalLoanAgreementCommand command) {
-        return commandBus.send(command);
+        StepInputs inputs = StepInputs.builder()
+                .forStepId(RegisterPersonalLoanAgreementSaga.STEP, command)
+                .build();
+        return engine.execute(RegisterPersonalLoanAgreementSaga.NAME, inputs)
+                .flatMap(result -> outcome(result, RegisterPersonalLoanAgreementSaga.STEP))
+                .map(StoredAgreement::body);
     }
 
     @Override
@@ -57,11 +68,27 @@ public class PersonalLoansServiceImpl implements PersonalLoansService {
 
     @Override
     public Mono<PersonalLoanAgreementDTO> updateAgreement(UpdatePersonalLoanAgreementCommand command) {
-        return commandBus.send(command);
+        StepInputs inputs = StepInputs.builder()
+                .forStepId(UpdatePersonalLoanAgreementSaga.LOAD, new LoadPersonalLoanAgreementCommand(command.getAgreementId()))
+                .forStepId(UpdatePersonalLoanAgreementSaga.STEP, command)
+                .build();
+        return engine.execute(UpdatePersonalLoanAgreementSaga.NAME, inputs)
+                .flatMap(result -> outcome(result, UpdatePersonalLoanAgreementSaga.STEP))
+                .map(StoredAgreement::body);
     }
 
     @Override
     public Mono<PaginationResponsePersonalLoanAgreementDTO> listAgreements() {
         return queryBus.query(new ListPersonalLoanAgreementsQuery());
+    }
+
+    private static Mono<StoredAgreement> outcome(SagaResult result, String stepId) {
+        if (result.isFailed()) {
+            Throwable error = result.error().orElseGet(() ->
+                    new IllegalStateException("Saga " + result.sagaName() + " failed"));
+            return Mono.error(error);
+        }
+        return Mono.justOrEmpty(result.resultOf(stepId, StoredAgreement.class))
+                .switchIfEmpty(Mono.error(new IllegalStateException("Saga step " + stepId + " produced no result")));
     }
 }
